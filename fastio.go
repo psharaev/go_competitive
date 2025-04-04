@@ -1,4 +1,4 @@
-package go_fast_io
+package fastio
 
 import (
 	"bufio"
