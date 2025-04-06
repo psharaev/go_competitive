@@ -18,7 +18,7 @@ func main() {
 	fmt.Fprintln(out, arr)
 }
 
-func next(r *bufio.Reader) string {
+func nextWord(r *bufio.Reader) string {
 	var s string
 	fscan, err := fmt.Fscan(r, &s)
 	if err != nil {
@@ -30,7 +30,7 @@ func next(r *bufio.Reader) string {
 	return s
 }
 
-func nextChecked(r *bufio.Reader) (string, bool) {
+func nextWordChecked(r *bufio.Reader) (string, bool) {
 	var s string
 	n, err := fmt.Fscan(r, &s)
 	if n == 0 || err != nil {
@@ -57,6 +57,18 @@ func nextArrayInt(in *bufio.Reader, n int) []int {
 		res[i] = nextInt(in)
 	}
 	return res
+}
+
+func nextFloat64(in *bufio.Reader) float64 {
+	var t float64
+	fscan, err := fmt.Fscan(in, &t)
+	if err != nil {
+		panic(err)
+	}
+	if fscan != 1 {
+		panic("not found int")
+	}
+	return t
 }
 
 func dumpArrayInt(out io.Writer, arr []int) {
