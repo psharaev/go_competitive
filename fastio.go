@@ -3,18 +3,20 @@ package fastio
 import (
 	"bufio"
 	"fmt"
+	"io"
+	"os"
 )
 
-//func main() {
-//	in := bufio.NewReader(os.Stdin)
-//	out := bufio.NewWriter(os.Stdout)
-//	defer out.Flush()
-//
-//	n := nextInt(in)
-//	arr := nextArrayInt(in, n)
-//
-//	fmt.Fprintln(out, arr)
-//}
+func main() {
+	in := bufio.NewReader(os.Stdin)
+	out := bufio.NewWriter(os.Stdout)
+	defer out.Flush()
+
+	n := nextInt(in)
+	arr := nextArrayInt(in, n)
+
+	fmt.Fprintln(out, arr)
+}
 
 func next(r *bufio.Reader) string {
 	var s string
@@ -26,6 +28,15 @@ func next(r *bufio.Reader) string {
 		panic("not found string")
 	}
 	return s
+}
+
+func nextChecked(r *bufio.Reader) (string, bool) {
+	var s string
+	n, err := fmt.Fscan(r, &s)
+	if n == 0 || err != nil {
+		return "", false
+	}
+	return s, true
 }
 
 func nextInt(in *bufio.Reader) int {
@@ -46,4 +57,10 @@ func nextArrayInt(in *bufio.Reader, n int) []int {
 		res[i] = nextInt(in)
 	}
 	return res
+}
+
+func dumpArrayInt(out io.Writer, arr []int) {
+	for _, item := range arr {
+		fmt.Fprintf(out, "%d ", item)
+	}
 }
