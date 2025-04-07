@@ -22,6 +22,18 @@ func (d *Deque) Empty() bool {
 	return d.size == 0
 }
 
+func (d *Deque) Front() int {
+	return d.arr[d.head]
+}
+
+func (d *Deque) Back() int {
+	idx := d.head + d.size - 1
+	if idx >= len(d.arr) {
+		idx -= len(d.arr)
+	}
+	return d.arr[idx]
+}
+
 func (d *Deque) resize(newCap int) {
 	newArr := make([]int, newCap)
 	if d.head+d.size <= len(d.arr) {
@@ -34,7 +46,7 @@ func (d *Deque) resize(newCap int) {
 	d.arr = newArr
 }
 
-func (d *Deque) PushBask(item int) {
+func (d *Deque) PushBack(item int) {
 	if len(d.arr) == d.size {
 		d.resize(2 * d.size)
 	}
