@@ -59,6 +59,14 @@ func nextArrayInt(in *bufio.Reader, n int) []int {
 	return res
 }
 
+func nextMatrixInt(in *bufio.Reader, rows int, cols int) [][]int {
+	res := make([][]int, rows)
+	for row := range rows {
+		res[row] = nextArrayInt(in, cols)
+	}
+	return res
+}
+
 func nextFloat64(in *bufio.Reader) float64 {
 	var t float64
 	fscan, err := fmt.Fscan(in, &t)

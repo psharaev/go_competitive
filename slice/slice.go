@@ -24,3 +24,39 @@ func FilledSlice[T any](n int, val T) []T {
 	}
 	return res
 }
+
+func FilledMatrix[T any](rows, cols int, val T) [][]T {
+	res := make([][]T, rows)
+	for i := range res {
+		res[i] = FilledSlice(cols, val)
+	}
+	return res
+}
+
+func NewMatrix[T any](rows, cols int) [][]T {
+	res := make([][]T, rows)
+	for i := range res {
+		res[i] = make([]T, cols)
+	}
+	return res
+}
+
+func Last[T any](arr []T) T {
+	return arr[len(arr)-1]
+}
+
+func Sum(arr []int) int {
+	res := 0
+	for _, v := range arr {
+		res += v
+	}
+	return res
+}
+
+func SumMatrix(arr [][]int) int {
+	res := 0
+	for _, v := range arr {
+		res += Sum(v)
+	}
+	return res
+}
