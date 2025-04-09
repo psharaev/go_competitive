@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/require"
 	"go_competitive/deque"
-	"math/rand/v2"
+	"math/rand"
 	"testing"
 )
 
@@ -20,9 +20,10 @@ const (
 
 	PopBack
 	PopFront
+	String
 )
 
-var _ deq = deque.NewDeque(0)
+var _ deq = deque.NewDeque[int](0)
 var _ deq = &slowDeque{}
 
 type deq interface {
@@ -37,23 +38,25 @@ type deq interface {
 
 	PopBack() int
 	PopFront() int
+	String() string
 }
 
 func Test_Stress(t *testing.T) {
 	t.Parallel()
 
 	n := 10_000
-	r := rand.New(&s{})
+	r := rand.New(rand.NewSource(0))
+
 	for range n {
 		t.Run(fmt.Sprint(n), func(t *testing.T) {
 			countOps := 10_000
 			m := &MergedDeque{
 				slowDeque: newSlowDeque(4 * countOps),
-				fastDeque: deque.NewDeque(r.IntN(10)),
+				fastDeque: deque.NewDeque[int](r.Intn(10)),
 			}
 
 			for range countOps {
-				op := r.IntN(8)
+				op := r.Intn(9)
 				switch op {
 				case Size:
 					m.Size(t, r)
@@ -71,6 +74,8 @@ func Test_Stress(t *testing.T) {
 					m.PopBack(t, r)
 				case PopFront:
 					m.PopFront(t, r)
+				case String:
+					m.String(t, r)
 				default:
 					panic(op)
 				}
@@ -81,7 +86,7 @@ func Test_Stress(t *testing.T) {
 
 type MergedDeque struct {
 	slowDeque *slowDeque
-	fastDeque *deque.Deque
+	fastDeque *deque.Deque[int]
 }
 
 func (m *MergedDeque) Size(t *testing.T, _ *rand.Rand) int {
@@ -131,7 +136,7 @@ func (m *MergedDeque) ensureElem(t *testing.T, r *rand.Rand) {
 }
 
 func (m *MergedDeque) PushBack(t *testing.T, r *rand.Rand) {
-	v := r.IntN(1000)
+	v := r.Intn(1000)
 	m.slowDeque.PushBack(v)
 	m.fastDeque.PushBack(v)
 	m.validateState(t, r)
@@ -146,7 +151,7 @@ func (m *MergedDeque) validateState(t *testing.T, r *rand.Rand) {
 }
 
 func (m *MergedDeque) PushFront(t *testing.T, r *rand.Rand) {
-	v := r.IntN(1000)
+	v := r.Intn(1000)
 	m.slowDeque.PushFront(v)
 	m.fastDeque.PushFront(v)
 
@@ -157,6 +162,9 @@ func (m *MergedDeque) PopBack(t *testing.T, r *rand.Rand) int {
 	m.ensureElem(t, r)
 	want := m.slowDeque.PopBack()
 	actual := m.fastDeque.PopBack()
+	if want != actual {
+		println(1)
+	}
 	require.Equal(t, want, actual)
 	m.validateState(t, r)
 	return want
@@ -168,6 +176,13 @@ func (m *MergedDeque) PopFront(t *testing.T, r *rand.Rand) int {
 	actual := m.fastDeque.PopFront()
 	require.Equal(t, want, actual)
 	m.validateState(t, r)
+	return want
+}
+
+func (m *MergedDeque) String(t *testing.T, r *rand.Rand) string {
+	want := m.slowDeque.String()
+	actual := m.fastDeque.String()
+	require.Equal(t, want, actual)
 	return want
 }
 
@@ -224,5 +239,9 @@ func (d *slowDeque) PopFront() int {
 
 func (d *slowDeque) PopBack() int {
 	d.tail--
-	return d.arr[d.tail+1]
+	return d.arr[d.tail]
+}
+
+func (d *slowDeque) String() string {
+	return fmt.Sprintf("%v", d.arr[d.head:d.tail])
 }

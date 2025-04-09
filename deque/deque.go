@@ -1,32 +1,34 @@
 package deque
 
-type Deque struct {
-	arr  []int
+import "fmt"
+
+type Deque[T any] struct {
+	arr  []T
 	head int
 	size int
 }
 
-func NewDeque(cap int) *Deque {
-	return &Deque{
-		arr:  make([]int, max(2, cap)),
+func NewDeque[T any](cap int) *Deque[T] {
+	return &Deque[T]{
+		arr:  make([]T, max(2, cap)),
 		head: 0,
 		size: 0,
 	}
 }
 
-func (d *Deque) Size() int {
+func (d *Deque[T]) Size() int {
 	return d.size
 }
 
-func (d *Deque) Empty() bool {
+func (d *Deque[T]) Empty() bool {
 	return d.size == 0
 }
 
-func (d *Deque) Front() int {
+func (d *Deque[T]) Front() T {
 	return d.arr[d.head]
 }
 
-func (d *Deque) Back() int {
+func (d *Deque[T]) Back() T {
 	idx := d.head + d.size - 1
 	if idx >= len(d.arr) {
 		idx -= len(d.arr)
@@ -34,8 +36,8 @@ func (d *Deque) Back() int {
 	return d.arr[idx]
 }
 
-func (d *Deque) resize(newCap int) {
-	newArr := make([]int, newCap)
+func (d *Deque[T]) resize(newCap int) {
+	newArr := make([]T, newCap)
 	if d.head+d.size <= len(d.arr) {
 		copy(newArr, d.arr[d.head:(d.head+d.size)])
 	} else {
@@ -46,7 +48,7 @@ func (d *Deque) resize(newCap int) {
 	d.arr = newArr
 }
 
-func (d *Deque) PushBack(item int) {
+func (d *Deque[T]) PushBack(item T) {
 	if len(d.arr) == d.size {
 		d.resize(2 * d.size)
 	}
@@ -54,7 +56,7 @@ func (d *Deque) PushBack(item int) {
 	d.size++
 }
 
-func (d *Deque) PushFront(item int) {
+func (d *Deque[T]) PushFront(item T) {
 	if len(d.arr) == d.size {
 		d.resize(2 * d.size)
 	}
@@ -63,18 +65,18 @@ func (d *Deque) PushFront(item int) {
 	d.size++
 }
 
-func (d *Deque) tailInsert() int {
+func (d *Deque[T]) tailInsert() int {
 	return (d.head + d.size) % len(d.arr)
 }
 
-func (d *Deque) frontInsert() int {
+func (d *Deque[T]) frontInsert() int {
 	if d.head-1 >= 0 {
 		return d.head - 1
 	}
 	return len(d.arr) - 1
 }
 
-func (d *Deque) PopFront() int {
+func (d *Deque[T]) PopFront() T {
 	if d.Empty() {
 		panic("PopFront: deque is empty")
 	}
@@ -87,10 +89,22 @@ func (d *Deque) PopFront() int {
 	return res
 }
 
-func (d *Deque) PopBack() int {
+func (d *Deque[T]) PopBack() T {
 	if d.Empty() {
 		panic("PopBack: deque is empty")
 	}
 	d.size--
 	return d.arr[d.tailInsert()]
+}
+
+func (d *Deque[T]) String() string {
+	res := make([]T, d.Size())
+	if d.head+d.size <= len(d.arr) {
+		copy(res, d.arr[d.head:(d.head+d.size)])
+	} else {
+		n := copy(res, d.arr[d.head:])
+		copy(res[n:], d.arr[:(d.size-n)])
+	}
+
+	return fmt.Sprintf("%v", res)
 }
