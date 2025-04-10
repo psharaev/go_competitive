@@ -1,5 +1,10 @@
 package slice
 
+import (
+	"fmt"
+	"slices"
+)
+
 func FillSlice[T any](arr []T, val T) {
 	if len(arr) == 0 {
 		return
@@ -69,8 +74,18 @@ func RemoveItem[T any](arr []T, idx int) []T {
 		return arr[:idx]
 	}
 
-	res := make([]T, 0, len(arr)-1)
-	res = append(res, arr[:idx]...)
-	res = append(res, arr[idx+1:]...)
-	return res
+	return slices.Concat(arr[:idx], arr[idx+1:])
+}
+
+func DumpSlice[T any](arr []T) {
+	for _, item := range arr {
+		fmt.Printf("%v ", item)
+	}
+	fmt.Println()
+}
+
+func dumpMatrix[T any](arr [][]T) {
+	for _, row := range arr {
+		DumpSlice(row)
+	}
 }
