@@ -60,3 +60,17 @@ func SumMatrix(arr [][]int) int {
 	}
 	return res
 }
+
+func RemoveItem[T any](arr []T, idx int) []T {
+	if idx == 0 {
+		return arr[1:]
+	}
+	if idx == len(arr)-1 {
+		return arr[:idx]
+	}
+
+	res := make([]T, 0, len(arr)-1)
+	res = append(res, arr[:idx]...)
+	res = append(res, arr[idx+1:]...)
+	return res
+}
