@@ -2,12 +2,12 @@ package segment_tree
 
 import "math/bits"
 
-type Vertex struct {
+type Block struct {
 	item int
 	idx  int
 }
 
-func (a *Vertex) Merge(b *Vertex) *Vertex {
+func (a *Block) Merge(b *Block) *Block {
 	if a.idx == 0 {
 		return b
 	}
