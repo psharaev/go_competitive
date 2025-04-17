@@ -3,20 +3,22 @@ package stress
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 	"strings"
 	"testing"
 )
 
 func TestStress(t *testing.T) {
-	r := rand.New(rand.NewSource(42))
-	for {
-		test(t, r.Int63())
+	for i := range 1000 {
+		t.Run(strconv.Itoa(i), func(t *testing.T) {
+			test(t, i)
+		})
 	}
 	//test(t, 50)
 }
 
-func test(t *testing.T, seed int64) {
-	rnd := rand.New(rand.NewSource(seed))
+func test(t *testing.T, seed int) {
+	rnd := rand.New(rand.NewSource(int64(seed)))
 
 	arr := genArray(rnd, 1, 100, 2, 50)
 	fmt.Println(len(arr))
