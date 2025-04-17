@@ -12,17 +12,13 @@ func (a Block) Merge(b Block) Block {
 	return b
 }
 
-type Mergable[T any] interface {
-	Merge(T) T
-}
-
-type SparseTable[T Mergable[T]] struct {
+type SparseTable struct {
 	n        int
 	logTable []int
-	st       [][]T
+	st       [][]Block
 }
 
-func (st *SparseTable[T]) Query(l int, r int) T {
+func (st *SparseTable) Query(l int, r int) Block {
 	length := r - l + 1
 	level := st.logTable[length]
 	block1 := st.st[level][l]
@@ -30,7 +26,7 @@ func (st *SparseTable[T]) Query(l int, r int) T {
 	return block1.Merge(block2)
 }
 
-func CreateSparseTable[T Mergable[T]](arr []T) SparseTable[T] {
+func CreateSparseTable(arr []Block) SparseTable {
 	n := len(arr)
 	logTable := make([]int, n+1)
 	logTable[1] = 0
@@ -44,8 +40,8 @@ func CreateSparseTable[T Mergable[T]](arr []T) SparseTable[T] {
 	}
 	maxLevel--
 
-	st := make([][]T, maxLevel+1)
-	st[0] = make([]T, n)
+	st := make([][]Block, maxLevel+1)
+	st[0] = make([]Block, n)
 	for i := 0; i < n; i++ {
 		st[0][i] = arr[i]
 	}
@@ -56,7 +52,7 @@ func CreateSparseTable[T Mergable[T]](arr []T) SparseTable[T] {
 		if numElements <= 0 {
 			break
 		}
-		st[level] = make([]T, numElements)
+		st[level] = make([]Block, numElements)
 		step := 1 << (level - 1)
 		for i := 0; i < numElements; i++ {
 			left := st[level-1][i]
@@ -65,7 +61,7 @@ func CreateSparseTable[T Mergable[T]](arr []T) SparseTable[T] {
 		}
 	}
 
-	return SparseTable[T]{
+	return SparseTable{
 		n:        n,
 		logTable: logTable,
 		st:       st,
