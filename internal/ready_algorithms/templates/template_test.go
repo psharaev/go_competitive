@@ -1,4 +1,4 @@
-package stress
+package main_test
 
 import (
 	"fmt"
@@ -20,12 +20,12 @@ func TestStress(t *testing.T) {
 func test(t *testing.T, seed int) {
 	rnd := rand.New(rand.NewSource(int64(seed)))
 
-	arr := genSliceInt(rnd, 1, 100, 2, 50)
+	arr := genArray(rnd, 1, 100, 2, 50)
 	fmt.Println(len(arr))
 	fmt.Println(sliceToString(arr))
 }
 
-func genSliceInt(r *rand.Rand, minSize, maxSize, minValue, maxValueInc int) []int {
+func genArray(r *rand.Rand, minSize, maxSize, minValue, maxValueInc int) []int {
 	n := genInt(r, minSize, maxSize)
 	if n == 0 {
 		if r.Intn(2) == 0 {
