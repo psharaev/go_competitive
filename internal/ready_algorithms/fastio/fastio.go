@@ -3,84 +3,144 @@ package fastio
 import (
 	"bufio"
 	"fmt"
-	"io"
+	"github.com/psharaev/go_competitive/internal/ready_algorithms/slice"
 	"os"
+	"strconv"
+	"strings"
+	"unicode"
 )
 
 func main() {
-	in := bufio.NewReader(os.Stdin)
+	in := NewFastReader()
 	out := bufio.NewWriter(os.Stdout)
 	defer out.Flush()
 
-	n := nextInt(in)
-	arr := nextArrayInt(in, n)
+	n := in.NextInt()
+	arr := in.NextLine()
 
+	fmt.Fprintln(out, n)
 	fmt.Fprintln(out, arr)
 }
 
-func nextWord(r *bufio.Reader) string {
-	var s string
-	fscan, err := fmt.Fscan(r, &s)
+type FastReader struct {
+	Reader bufio.Reader
+}
+
+func NewFastReader() FastReader {
+	return FastReader{Reader: *bufio.NewReader(os.Stdin)}
+}
+
+func (r *FastReader) NextWord() string {
+	sb := strings.Builder{}
+
+	foundWord := false
+	for {
+		ch, _, err := r.Reader.ReadRune()
+		if err != nil {
+			panic(err)
+		}
+
+		if unicode.IsSpace(ch) {
+			if foundWord {
+				return sb.String()
+			}
+			continue
+		}
+
+		foundWord = true
+		sb.WriteRune(ch)
+	}
+}
+
+func (r *FastReader) NextWordChecked() (string, bool) {
+	sb := strings.Builder{}
+
+	foundWord := false
+	for {
+		ch, _, err := r.Reader.ReadRune()
+		if err != nil {
+			return "", false
+		}
+
+		if unicode.IsSpace(ch) {
+			if foundWord {
+				return sb.String(), true
+			}
+			continue
+		}
+
+		foundWord = true
+		sb.WriteRune(ch)
+	}
+}
+
+func (r *FastReader) NextInt() int {
+	num, err := strconv.Atoi(r.NextWord())
 	if err != nil {
 		panic(err)
 	}
-	if fscan != 1 {
-		panic("not found string")
-	}
-	return s
+	return num
 }
 
-func nextWordChecked(r *bufio.Reader) (string, bool) {
-	var s string
-	n, err := fmt.Fscan(r, &s)
-	if n == 0 || err != nil {
-		return "", false
-	}
-	return s, true
-}
-
-func nextInt(in *bufio.Reader) int {
-	var t int
-	fscan, err := fmt.Fscan(in, &t)
+func (r *FastReader) NextLine() string {
+	str, err := r.Reader.ReadString('\n')
 	if err != nil {
 		panic(err)
 	}
-	if fscan != 1 {
-		panic("not found int")
-	}
-	return t
+	return strings.TrimRight(str, "\r\n")
 }
 
-func nextArrayInt(in *bufio.Reader, n int) []int {
-	res := make([]int, n)
-	for i := 0; i < n; i++ {
-		res[i] = nextInt(in)
+func (r *FastReader) NextSliceInt(size int) []int {
+	res := make([]int, size)
+	for i := 0; i < size; i++ {
+		res[i] = r.NextInt()
 	}
 	return res
 }
 
-func nextMatrixInt(in *bufio.Reader, rows int, cols int) [][]int {
+func (r *FastReader) NextSliceChars() []byte {
+	return []byte(r.NextWord())
+}
+
+func (r *FastReader) NextSliceWord(size int) []string {
+	res := make([]string, size)
+	for i := 0; i < size; i++ {
+		res[i] = r.NextWord()
+	}
+	return res
+}
+
+func (r *FastReader) NextMatrixInt(rows int, cols int) slice.Matrix[int] {
 	res := make([][]int, rows)
 	for row := range rows {
-		res[row] = nextArrayInt(in, cols)
+		res[row] = r.NextSliceInt(cols)
 	}
-	return res
+	return slice.Matrix[int]{
+		M:    res,
+		Rows: rows,
+		Cols: cols,
+	}
 }
 
-func nextFloat64(in *bufio.Reader) float64 {
-	var t float64
-	fscan, err := fmt.Fscan(in, &t)
+func (r *FastReader) NextMatrixChars(rows int, cols int) slice.Matrix[byte] {
+	res := make([][]byte, rows)
+	for row := range rows {
+		res[row] = r.NextSliceChars()
+		if len(res[row]) != cols {
+			panic("matrix rows out of range")
+		}
+	}
+	return slice.Matrix[byte]{
+		M:    res,
+		Rows: rows,
+		Cols: cols,
+	}
+}
+
+func (r *FastReader) NextFloat64() float64 {
+	num, err := strconv.ParseFloat(r.NextWord(), 64)
 	if err != nil {
 		panic(err)
 	}
-	if fscan != 1 {
-		panic("not found int")
-	}
-	return t
-}
-
-func dumpArrayInt(out io.Writer, arr []int) {
-	for _, item := range arr {
-		fmt.Fprintf(out, "%d ", item)
-	}
+	return num
 }
