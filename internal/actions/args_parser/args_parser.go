@@ -30,11 +30,13 @@ func ParseArgs(args []string) (models.Args, error) {
 	}
 	execDir := filepath.Dir(execPath)
 
+	templatesDir := filepath.Join(execDir, "..", "templates")
+
 	res := models.Args{
 		OutputFolder:     outputFolder,
 		CountProblems:    countProblems,
-		TemplatePath:     filepath.Join(execDir, "template"),
-		TemplateTestPath: filepath.Join(execDir, "template_test"),
+		TemplatePath:     filepath.Join(templatesDir, "template"),
+		TemplateTestPath: filepath.Join(templatesDir, "template_test"),
 	}
 	return res, nil
 }
