@@ -1,4 +1,4 @@
-module go_competitive
+module github.com/psharaev/go_competitive
 
 go 1.24
 

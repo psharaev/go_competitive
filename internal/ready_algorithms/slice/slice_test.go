@@ -2,8 +2,8 @@ package slice_test
 
 import (
 	"fmt"
+	"github.com/psharaev/go_competitive/internal/ready_algorithms/slice"
 	"github.com/stretchr/testify/require"
-	"go_competitive/slice"
 	"testing"
 )
 
