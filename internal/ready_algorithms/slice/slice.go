@@ -113,9 +113,3 @@ func DumpSlice[T any](arr []T) {
 	}
 	fmt.Println()
 }
-
-func DumpMatrix[T any](arr [][]T) {
-	for _, row := range arr {
-		DumpSlice(row)
-	}
-}
