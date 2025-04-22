@@ -298,16 +298,16 @@ func FilledMatrix[T any](rows, cols int, val T) Matrix[T] {
 	}
 }
 
-func NewMatrix[T any](rows, cols int) Matrix[T] {
+func New2dSlice[T any](rows, cols int) [][]T {
 	res := make([][]T, rows)
 	for i := range res {
 		res[i] = make([]T, cols)
 	}
-	return Matrix[T]{
-		M:    res,
-		Rows: rows,
-		Cols: cols,
-	}
+	return res
+}
+
+func NewMatrix[T any](rows, cols int) Matrix[T] {
+	return Matrix[T]{M: New2dSlice[T](rows, cols), Rows: rows, Cols: cols}
 }
 
 func Last[T any](arr []T) T {
@@ -320,6 +320,79 @@ func Sum(arr []int) int {
 		res += v
 	}
 	return res
+}
+
+func (m *Matrix[T]) Clone() Matrix[T] {
+	res := New2dSlice[T](m.Rows, m.Cols)
+	for row := range m.Rows {
+		for col := range m.Cols {
+			res[row][col] = m.M[row][col]
+		}
+	}
+	return Matrix[T]{M: res, Rows: m.Rows, Cols: m.Cols}
+}
+
+func (m *Matrix[T]) Transpose() Matrix[T] {
+	res := New2dSlice[T](m.Cols, m.Rows)
+
+	for row := 0; row < m.Rows; row++ {
+		for col := 0; col < m.Cols; col++ {
+			res[col][row] = m.M[row][col]
+		}
+	}
+
+	return Matrix[T]{M: res, Rows: m.Cols, Cols: m.Rows}
+}
+
+func (m *Matrix[T]) RotateClockwise(count int) Matrix[T] {
+	// Нормализация count в диапазон [0, 3]
+	count = ((count % 4) + 4) % 4
+
+	switch count % 4 {
+	case 0:
+		return m.Clone()
+	case 1:
+		return m.RotateClockwise90()
+	case 2:
+		return m.RotateClockwise180()
+	case 3:
+		return m.RotateClockwise270()
+	default:
+		panic("unreachable")
+	}
+}
+
+// RotateClockwise90 Поворот на 90 градусов по часовой стрелке
+func (m *Matrix[T]) RotateClockwise90() Matrix[T] {
+	res := New2dSlice[T](m.Cols, m.Rows)
+	for i := 0; i < m.Cols; i++ {
+		for j := 0; j < m.Rows; j++ {
+			res[i][j] = m.M[m.Rows-1-j][i]
+		}
+	}
+	return Matrix[T]{M: res, Rows: m.Cols, Cols: m.Rows}
+}
+
+// RotateClockwise180 Поворот на 180 градусов по часовой стрелке
+func (m *Matrix[T]) RotateClockwise180() Matrix[T] {
+	res := New2dSlice[T](m.Rows, m.Cols)
+	for i := 0; i < m.Rows; i++ {
+		for j := 0; j < m.Cols; j++ {
+			res[i][j] = m.M[m.Rows-1-i][m.Cols-1-j]
+		}
+	}
+	return Matrix[T]{M: res, Rows: m.Rows, Cols: m.Cols}
+}
+
+// RotateClockwise270 Поворот на 270 градусов по часовой стрелке
+func (m *Matrix[T]) RotateClockwise270() Matrix[T] {
+	res := New2dSlice[T](m.Cols, m.Rows)
+	for i := 0; i < m.Cols; i++ {
+		for j := 0; j < m.Rows; j++ {
+			res[i][j] = m.M[j][m.Cols-1-i]
+		}
+	}
+	return Matrix[T]{M: res, Rows: m.Cols, Cols: m.Rows}
 }
 
 func RemoveItem[T any](arr []T, idx int) []T {
@@ -361,10 +434,4 @@ func DumpSlice[T any](arr []T) {
 		fmt.Printf("%v ", item)
 	}
 	fmt.Println()
-}
-
-func DumpMatrix[T any](arr [][]T) {
-	for _, row := range arr {
-		DumpSlice(row)
-	}
 }
