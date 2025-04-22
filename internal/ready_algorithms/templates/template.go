@@ -420,7 +420,7 @@ func JoinSlice[T any](arr []T, sep, prefix, suffix string) string {
 	}
 	sb := strings.Builder{}
 	sb.WriteString(prefix)
-	sb.WriteString(fmt.Sprintf("%v", arr))
+	sb.WriteString(fmt.Sprintf("%v", arr[0]))
 	for _, item := range arr[1:] {
 		sb.WriteString(sep)
 		sb.WriteString(fmt.Sprintf("%v", item))
