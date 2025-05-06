@@ -2,6 +2,7 @@ package stress
 
 import (
 	"fmt"
+	"github.com/stretchr/testify/require"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -9,9 +10,11 @@ import (
 )
 
 func TestStress(t *testing.T) {
-	for i := range 1000 {
-		t.Run(strconv.Itoa(i), func(t *testing.T) {
-			test(t, i)
+	testCase(t, []int{1})
+
+	for seed := range 1000 {
+		t.Run(strconv.Itoa(seed), func(t *testing.T) {
+			test(t, seed)
 		})
 	}
 	//test(t, 50)
@@ -21,8 +24,14 @@ func test(t *testing.T, seed int) {
 	rnd := rand.New(rand.NewSource(int64(seed)))
 
 	arr := genSliceInt(rnd, 1, 100, 2, 50)
+	testCase(t, arr)
+}
+
+func testCase(t *testing.T, arr []int) {
 	fmt.Println(len(arr))
 	fmt.Println(sliceToString(arr))
+
+	require.Equal(t, len(arr), len(arr))
 }
 
 func genSliceInt(r *rand.Rand, minSize, maxSize, minValue, maxValueInc int) []int {

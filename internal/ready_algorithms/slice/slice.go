@@ -180,6 +180,10 @@ func JoinSlice[T any](arr []T, sep, prefix, suffix string) string {
 	return sb.String()
 }
 
+func SliceCopy[T any](arr []T) []T {
+	return append([]T(nil), arr...)
+}
+
 func DumpSlice[T any](arr []T) {
 	for _, item := range arr {
 		fmt.Printf("%v ", item)
