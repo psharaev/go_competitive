@@ -52,8 +52,31 @@ install:
 vendor:
 	@go mod vendor
 
+## add-to-path: Показать инструкции для добавления папки build в PATH
+add-to-path:
+	@mkdir -p $(BUILD_DIR)
+	@echo "\nДобавьте папку с бинарником в PATH:\n"
+	@build_path=$$(cd $(BUILD_DIR) && pwd); \
+	if [ "$$(uname -s)" = "Darwin" ] || [ "$$(uname -s)" = "Linux" ]; then \
+		echo "Для Linux/macOS (временное добавление):"; \
+		echo "  export PATH=\$$PATH:$$build_path\n"; \
+		echo "Для постоянного добавления (bash/zsh):"; \
+		echo "  echo 'export PATH=\$$PATH:$$build_path' >> ~/.bashrc && source ~/.bashrc\n"; \
+	elif [ "$$OS" = "Windows_NT" ]; then \
+		win_path=$$(cygpath -w "$$build_path" 2>/dev/null || echo "$$build_path"); \
+		echo "Для Windows (временное добавление):"; \
+		echo "  set PATH=%%PATH%%;$$win_path"; \
+		echo "\nДля постоянного добавления:"; \
+		echo "  1. Правой кнопкой по 'Этот компьютер' → Свойства"; \
+		echo "  2. Дополнительные параметры системы → Переменные среды"; \
+		echo "  3. В разделе 'Системные переменные' выберите 'Path' → Изменить"; \
+		echo "  4. Добавьте новую запись: $$win_path\n"; \
+	else \
+		echo "Неизвестная ОС. Путь к бинарнику: $$build_path"; \
+	fi
+
 ## help: Показать доступные команды
 help: Makefile
 	@sed -n 's/^##//p' $< | column -t -s ':' | sed -e 's/^/ /'
 
-.PHONY: build test test-coverage lint fmt clean deps install vendor help
+.PHONY: build test test-coverage lint fmt clean deps install vendor help add-to-path
