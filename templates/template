@@ -20,9 +20,12 @@ func main() {
 		n := in.NextInt()
 		arr := in.NextSliceInt(n)
 
-		fmt.Fprintln(out, n)
-		fmt.Fprintln(out, arr)
+		fmt.Fprintln(out, solve(arr))
 	}
+}
+
+func solve(arr []int) int {
+	return 0
 }
 
 type FastReader struct {

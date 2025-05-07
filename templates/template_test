@@ -1,40 +1,75 @@
-package stress
+package main
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"strconv"
-	"strings"
 	"testing"
 )
 
-func TestStress(t *testing.T) {
-	testCase(t, []int{1})
-
-	for seed := range 1000 {
-		t.Run(strconv.Itoa(seed), func(t *testing.T) {
-			test(t, seed)
-		})
-	}
-	//test(t, 50)
+func TestSeed_50(t *testing.T) {
+	testSeed(t, 50)
 }
 
-func test(t *testing.T, seed int) {
-	rnd := rand.New(rand.NewSource(int64(seed)))
+func TestStress(t *testing.T) {
+	if !t.Run("examples", examples) {
+		return
+	}
 
-	arr := genSliceInt(rnd, 1, 100, 2, 50)
-	testCase(t, arr)
+	if !t.Run("manuals", manuals) {
+		return
+	}
+
+	for i := 0; i < 1000; i++ {
+		t.Run(strconv.Itoa(i), func(t *testing.T) {
+			testSeed(t, i)
+		})
+	}
+}
+
+func examples(t *testing.T) {
+	t.Run("1", func(t *testing.T) {
+		testCase(t, []int{1})
+	})
+}
+
+func manuals(t *testing.T) {
+	t.Run("1", func(t *testing.T) {
+		testCase(t, []int{1})
+	})
+
+	seeds := []int{
+		50,
+	}
+	for _, seed := range seeds {
+		t.Run(fmt.Sprintf("seed %d", seed), func(t *testing.T) {
+			testSeed(t, seed)
+		})
+	}
 }
 
 func testCase(t *testing.T, arr []int) {
-	fmt.Println(len(arr))
-	fmt.Println(sliceToString(arr))
+	want := slowSolve(arr)
+	got := solve(arr)
 
-	require.Equal(t, len(arr), len(arr))
+	if !assert.Equal(t, want, got) {
+		t.Logf("%#v", arr)
+	}
 }
 
-func genSliceInt(r *rand.Rand, minSize, maxSize, minValue, maxValueInc int) []int {
+func testSeed(t *testing.T, seed int) {
+	rnd := rand.New(rand.NewSource(int64(seed)))
+
+	arr := genArray(rnd, 2, 6, 1, 100)
+	testCase(t, arr)
+}
+
+func slowSolve(arr []int) int {
+	return 0
+}
+
+func genArray(r *rand.Rand, minSize, maxSize, minValue, maxValueInc int) []int {
 	n := genInt(r, minSize, maxSize)
 	if n == 0 {
 		if r.Intn(2) == 0 {
@@ -53,16 +88,6 @@ func genInt(r *rand.Rand, min, maxInc int) int {
 	return r.Intn(maxInc-min+1) + min
 }
 
-func sliceToString[T any](slice []T) string {
-	if len(slice) == 0 {
-		return ""
-	}
-	builder := strings.Builder{}
-	builder.WriteString(fmt.Sprintf("%v", slice[0]))
-
-	for _, item := range slice[1:] {
-		builder.WriteString(fmt.Sprintf(" %v", item))
-	}
-
-	return builder.String()
+func SliceCopy[T any](arr []T) []T {
+	return append([]T(nil), arr...)
 }
