@@ -1,4 +1,4 @@
-package segment_tree
+package segment_tree_legacy
 
 import (
 	"fmt"
