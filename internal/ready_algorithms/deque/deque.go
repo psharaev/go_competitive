@@ -77,9 +77,6 @@ func (d *Deque[T]) frontInsert() int {
 }
 
 func (d *Deque[T]) PopFront() T {
-	if d.Empty() {
-		panic("PopFront: deque is empty")
-	}
 	res := d.arr[d.head]
 	d.head++
 	d.size--
@@ -90,9 +87,6 @@ func (d *Deque[T]) PopFront() T {
 }
 
 func (d *Deque[T]) PopBack() T {
-	if d.Empty() {
-		panic("PopBack: deque is empty")
-	}
 	d.size--
 	return d.arr[d.tailInsert()]
 }
