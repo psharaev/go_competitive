@@ -1,11 +1,12 @@
 package bitset_test
 
 import (
-	"github.com/psharaev/go_competitive/internal/ready_algorithms/bitset"
-	"github.com/stretchr/testify/require"
 	"math/rand"
 	"strconv"
 	"testing"
+
+	"github.com/psharaev/go_competitive/internal/ready_algorithms/bitset"
+	"github.com/stretchr/testify/require"
 )
 
 func TestStress(t *testing.T) {

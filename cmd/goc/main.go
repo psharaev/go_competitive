@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/psharaev/go_competitive/internal/actions/args_parser"
-	"github.com/psharaev/go_competitive/internal/actions/generator"
 	"log"
 	"os"
+
+	"github.com/psharaev/go_competitive/internal/actions/args_parser"
+	"github.com/psharaev/go_competitive/internal/actions/generator"
 )
 
 const (

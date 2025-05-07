@@ -7,7 +7,7 @@ type FenwickTree struct {
 func NewFenwickTree(arr []int) *FenwickTree {
 	ft := &FenwickTree{tree: make([]int, len(arr))}
 	for i, v := range arr {
-		ft.add(i, v)
+		ft.Add(i, v)
 	}
 	return ft
 }
@@ -24,18 +24,14 @@ func (t *FenwickTree) sumPrefix(r int) int {
 	return sum
 }
 
-func (t *FenwickTree) add(idx int, val int) {
+func (t *FenwickTree) Add(idx int, val int) {
 	for ; idx < len(t.tree); idx = idx | (idx + 1) {
 		t.tree[idx] += val
 	}
 }
 
-func (t *FenwickTree) Add(idx int, val int) {
-	t.add(idx, val)
-}
-
 func (t *FenwickTree) Set(idx int, val int) {
-	t.add(idx, val-t.Get(idx))
+	t.Add(idx, val-t.Get(idx))
 }
 
 func (t *FenwickTree) Get(idx int) int {

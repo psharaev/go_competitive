@@ -1,2 +1,13 @@
-/vendor/
+# IDE system files
 /.idea/
+
+.vscode
+
+# vendoring cache directory
+.cache
+
+# Go workspace files
+/vendor/
+
+.DS_Store
+/build/

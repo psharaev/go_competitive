@@ -2,10 +2,11 @@ package deque_test
 
 import (
 	"fmt"
-	"github.com/psharaev/go_competitive/internal/ready_algorithms/deque"
-	"github.com/stretchr/testify/require"
 	"math/rand"
 	"testing"
+
+	"github.com/psharaev/go_competitive/internal/ready_algorithms/deque"
+	"github.com/stretchr/testify/require"
 )
 
 const (

@@ -2,9 +2,10 @@ package slice_test
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/psharaev/go_competitive/internal/ready_algorithms/slice"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestFillSlice(t *testing.T) {

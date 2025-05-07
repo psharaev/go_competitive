@@ -2,10 +2,11 @@ package generator
 
 import (
 	"fmt"
-	"github.com/psharaev/go_competitive/internal/models"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/psharaev/go_competitive/internal/models"
 )
 
 func Generate(args models.Args) error {

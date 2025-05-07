@@ -2,10 +2,11 @@ package args_parser
 
 import (
 	"fmt"
-	"github.com/psharaev/go_competitive/internal/models"
 	"os"
 	"path/filepath"
 	"strconv"
+
+	"github.com/psharaev/go_competitive/internal/models"
 )
 
 func ParseArgs(args []string) (models.Args, error) {

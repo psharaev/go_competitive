@@ -3,11 +3,12 @@ package fastio
 import (
 	"bufio"
 	"fmt"
-	"github.com/psharaev/go_competitive/internal/ready_algorithms/slice"
 	"os"
 	"strconv"
 	"strings"
 	"unicode"
+
+	"github.com/psharaev/go_competitive/internal/ready_algorithms/slice"
 )
 
 func main() {
