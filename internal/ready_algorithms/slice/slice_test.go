@@ -8,6 +8,8 @@ import (
 )
 
 func TestFillSlice(t *testing.T) {
+	t.Parallel()
+
 	type testCase struct {
 		arr []int
 		val int
