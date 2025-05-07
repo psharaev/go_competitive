@@ -9,19 +9,20 @@ import (
 )
 
 func TestStress(t *testing.T) {
+	t.Parallel()
+
 	for i := range 1000 {
 		t.Run(strconv.Itoa(i), func(t *testing.T) {
 			test(t, i)
 		})
 	}
-	//test(t, 50)
 }
 
 func test(t *testing.T, seed int) {
 	rnd := rand.New(rand.NewSource(int64(seed)))
 
 	n := genInt(rnd, 1, 10000)
-	bitset := bitset.NewBitset(n)
+	bs := bitset.NewBitset(n)
 	m := map[int]bool{}
 
 	k := genInt(rnd, 1, 100_000)
@@ -30,14 +31,14 @@ func test(t *testing.T, seed int) {
 		op := genInt(rnd, 1, 3)
 		switch op {
 		case 0:
-			actual := bitset.Get(pos)
+			actual := bs.Get(pos)
 			want := m[pos]
 			require.Equal(t, want, actual)
 		case 1:
-			bitset.Clear(pos)
+			bs.Clear(pos)
 			m[pos] = false
 		case 2:
-			bitset.Set(pos)
+			bs.Set(pos)
 			m[pos] = true
 		}
 	}

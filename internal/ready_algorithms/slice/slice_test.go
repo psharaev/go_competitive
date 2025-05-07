@@ -31,7 +31,7 @@ func TestFillSlice(t *testing.T) {
 	}
 
 	for _, tc := range cases {
-		t.Run(fmt.Sprintf("%v", tc.arr), func(t *testing.T) {
+		t.Run(fmt.Sprintf("%v", len(tc.arr)), func(t *testing.T) {
 			slice.FillSlice(tc.arr, tc.val)
 
 			for _, item := range tc.arr {

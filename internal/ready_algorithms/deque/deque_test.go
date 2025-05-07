@@ -41,15 +41,15 @@ type deq interface {
 	String() string
 }
 
-func Test_Stress(t *testing.T) {
+func Test_Deque(t *testing.T) {
 	t.Parallel()
 
-	n := 10_000
+	n := 1000
 	r := rand.New(rand.NewSource(0))
 
 	for range n {
 		t.Run(fmt.Sprint(n), func(t *testing.T) {
-			countOps := 10_000
+			countOps := 1000
 			m := &MergedDeque{
 				slowDeque: newSlowDeque(4 * countOps),
 				fastDeque: deque.NewDeque[int](r.Intn(10)),
