@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -85,7 +86,7 @@ func (r *FastReader) NextInt() int {
 
 func (r *FastReader) NextLine() string {
 	str, err := r.Reader.ReadString('\n')
-	if err != nil {
+	if err != nil && err != io.EOF {
 		panic(err)
 	}
 	return strings.TrimRight(str, "\r\n")
