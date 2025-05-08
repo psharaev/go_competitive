@@ -1,4 +1,4 @@
-package main
+package fastio
 
 import (
 	"bufio"
@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	in := NewFastReader()
+	in := NewFastReader(os.Stdin)
 	out := bufio.NewWriter(os.Stdout)
 	defer out.Flush()
 
@@ -28,8 +28,8 @@ type FastReader struct {
 	Reader bufio.Reader
 }
 
-func NewFastReader() FastReader {
-	return FastReader{Reader: *bufio.NewReader(os.Stdin)}
+func NewFastReader(rd io.Reader) FastReader {
+	return FastReader{Reader: *bufio.NewReader(rd)}
 }
 
 func (r *FastReader) NextWord() string {
@@ -39,6 +39,9 @@ func (r *FastReader) NextWord() string {
 	for {
 		ch, _, err := r.Reader.ReadRune()
 		if err != nil {
+			if err == io.EOF {
+				return sb.String()
+			}
 			panic(err)
 		}
 
@@ -61,6 +64,9 @@ func (r *FastReader) NextWordChecked() (string, bool) {
 	for {
 		ch, _, err := r.Reader.ReadRune()
 		if err != nil {
+			if err == io.EOF {
+				return sb.String(), foundWord
+			}
 			return "", false
 		}
 
