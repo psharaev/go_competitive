@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/psharaev/go_competitive/internal/ready_algorithms/fast_segment_tree"
+	"github.com/psharaev/go_competitive/dsa/fast_segment_tree"
 	"github.com/stretchr/testify/require"
 )
 

@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/psharaev/go_competitive/internal/ready_algorithms/deque"
+	"github.com/psharaev/go_competitive/dsa/deque"
 	"github.com/stretchr/testify/require"
 )
 

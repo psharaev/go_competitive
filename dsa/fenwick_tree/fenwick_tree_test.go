@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/psharaev/go_competitive/internal/ready_algorithms/fenwick_tree"
+	"github.com/psharaev/go_competitive/dsa/fenwick_tree"
 	"github.com/stretchr/testify/require"
 )
 

@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
 	"strconv"
 	"testing"
+
+	"github.com/psharaev/go_competitive/utils/generator"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -60,33 +61,14 @@ func testCase(t *testing.T, arr []int) {
 }
 
 func testSeed(t *testing.T, seed int) {
-	rnd := rand.New(rand.NewSource(int64(seed)))
+	gen := generator.NewGenerator(seed)
 
-	arr := genArray(rnd, 2, 6, 1, 100)
+	arr := gen.SliceInt(2, 6, 1, 100)
 	testCase(t, arr)
 }
 
 func slowSolve(arr []int) int {
 	return 0
-}
-
-func genArray(r *rand.Rand, minSize, maxSize, minValue, maxValueInc int) []int {
-	n := genInt(r, minSize, maxSize)
-	if n == 0 {
-		if r.Intn(2) == 0 {
-			return nil
-		}
-		return []int{}
-	}
-	a := make([]int, n)
-	for i := range a {
-		a[i] = genInt(r, minValue, maxValueInc)
-	}
-	return a
-}
-
-func genInt(r *rand.Rand, min, maxInc int) int {
-	return r.Intn(maxInc-min+1) + min
 }
 
 func SliceCopy[T any](arr []T) []T {

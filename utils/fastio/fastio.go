@@ -1,4 +1,4 @@
-package fastio
+package main
 
 import (
 	"bufio"
@@ -8,7 +8,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/psharaev/go_competitive/internal/ready_algorithms/slice"
+	"github.com/psharaev/go_competitive/utils/slice"
 )
 
 func main() {

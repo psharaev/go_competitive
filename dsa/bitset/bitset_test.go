@@ -1,35 +1,36 @@
 package bitset_test
 
 import (
-	"math/rand"
 	"strconv"
 	"testing"
 
-	"github.com/psharaev/go_competitive/internal/ready_algorithms/bitset"
+	"github.com/psharaev/go_competitive/utils/generator"
+
+	"github.com/psharaev/go_competitive/dsa/bitset"
 	"github.com/stretchr/testify/require"
 )
 
 func TestStress(t *testing.T) {
 	t.Parallel()
 
-	for i := range 1000 {
-		t.Run(strconv.Itoa(i), func(t *testing.T) {
-			test(t, i)
+	for seed := range 1000 {
+		t.Run(strconv.Itoa(seed), func(t *testing.T) {
+			test(t, seed)
 		})
 	}
 }
 
 func test(t *testing.T, seed int) {
-	rnd := rand.New(rand.NewSource(int64(seed)))
+	gen := generator.NewGenerator(seed)
 
-	n := genInt(rnd, 1, 10000)
+	n := gen.IntInc(1, 10000)
 	bs := bitset.NewBitset(n)
 	m := map[int]bool{}
 
-	k := genInt(rnd, 1, 100_000)
+	k := gen.IntInc(1, 100_000)
 	for range k {
-		pos := genInt(rnd, 0, n-1)
-		op := genInt(rnd, 1, 3)
+		pos := gen.IntInc(0, n-1)
+		op := gen.IntInc(1, 3)
 		switch op {
 		case 0:
 			actual := bs.Get(pos)
@@ -43,8 +44,4 @@ func test(t *testing.T, seed int) {
 			m[pos] = true
 		}
 	}
-}
-
-func genInt(r *rand.Rand, min, maxInc int) int {
-	return r.Intn(maxInc-min+1) + min
 }

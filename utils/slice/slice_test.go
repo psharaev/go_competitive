@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/psharaev/go_competitive/internal/ready_algorithms/slice"
+	"github.com/psharaev/go_competitive/utils/slice"
 	"github.com/stretchr/testify/require"
 )
 
