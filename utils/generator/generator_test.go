@@ -15,7 +15,7 @@ func Test_IntInc(t *testing.T) {
 	set := map[int]bool{}
 
 	for range 1000 {
-		val := gen.IntInc(-5, 5)
+		val := gen.Int(-5, 5)
 
 		require.GreaterOrEqual(t, val, -5)
 		require.LessOrEqual(t, val, 5)

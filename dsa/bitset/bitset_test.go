@@ -23,14 +23,14 @@ func TestStress(t *testing.T) {
 func test(t *testing.T, seed int) {
 	gen := generator.NewGenerator(seed)
 
-	n := gen.IntInc(1, 10000)
+	n := gen.Int(1, 10000)
 	bs := bitset.NewBitset(n)
 	m := map[int]bool{}
 
-	k := gen.IntInc(1, 100_000)
+	k := gen.Int(1, 100_000)
 	for range k {
-		pos := gen.IntInc(0, n-1)
-		op := gen.IntInc(1, 3)
+		pos := gen.Int(0, n-1)
+		op := gen.Int(1, 3)
 		switch op {
 		case 0:
 			actual := bs.Get(pos)

@@ -12,8 +12,8 @@ func NewGenerator(seed int) *Generator {
 	}
 }
 
-// IntInc return inclusive [min, max]
-func (g *Generator) IntInc(min, max int) int {
+// Int return inclusive [min, max]
+func (g *Generator) Int(min, max int) int {
 	return g.r.Intn(max-min+1) + min
 }
 
@@ -33,6 +33,24 @@ func (g *Generator) Bool(p float64) bool {
 
 // SliceInt n = [minSize, maxSize] val = [minVal, maxVal]
 func (g *Generator) SliceInt(minSize, maxSize, minVal, maxVal int) []int {
+	return GenSlice[int](g, minSize, maxSize,
+		func() int {
+			return g.Int(minVal, maxVal)
+		},
+	)
+}
+
+// SliceBool n = [minSize, maxSize] val = gen.Bool(p)
+func (g *Generator) SliceBool(minSize, maxSize int, p float64) []bool {
+	return GenSlice[bool](g, minSize, maxSize,
+		func() bool {
+			return g.Bool(p)
+		},
+	)
+}
+
+// GenSlice n = [minSize, maxSize] val = valGen()
+func GenSlice[T any](g *Generator, minSize, maxSize int, valGen func() T) []T {
 	if minSize < 0 {
 		panic("minSize must be >= 0")
 	}
@@ -40,18 +58,7 @@ func (g *Generator) SliceInt(minSize, maxSize, minVal, maxVal int) []int {
 		panic("minSize must be <= maxSize")
 	}
 
-	n := g.IntInc(minSize, maxSize)
-	return GenSlice[int](g, n,
-		func() int {
-			return g.IntInc(minVal, maxVal)
-		},
-	)
-}
-
-func GenSlice[T any](g *Generator, size int, valGen func() T) []T {
-	if size < 0 {
-		panic("size must be >= 0")
-	}
+	size := g.Int(minSize, maxSize)
 
 	if size == 0 {
 		if g.Bool(0.5) {
