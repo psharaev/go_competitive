@@ -1,104 +1,119 @@
 package deque
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Deque[T any] struct {
-	arr  []T
+	data []T
 	head int
-	size int
+	tail int
 }
 
-func NewDeque[T any](cap int) *Deque[T] {
-	return &Deque[T]{
-		arr:  make([]T, max(2, cap)),
+func NewDeque[T any](cap int) Deque[T] {
+	if cap < 1 {
+		cap = 1
+	}
+	return Deque[T]{
+		data: make([]T, cap),
 		head: 0,
-		size: 0,
+		tail: 0,
 	}
 }
 
 func (d *Deque[T]) Size() int {
-	return d.size
+	return (d.tail - d.head + len(d.data)) % len(d.data)
 }
 
 func (d *Deque[T]) Empty() bool {
-	return d.size == 0
+	return d.head == d.tail
 }
 
 func (d *Deque[T]) Front() T {
-	return d.arr[d.head]
+	if d.Empty() {
+		panic("deque is empty")
+	}
+	return d.data[d.head]
 }
 
 func (d *Deque[T]) Back() T {
-	idx := d.head + d.size - 1
-	if idx >= len(d.arr) {
-		idx -= len(d.arr)
+	if d.Empty() {
+		panic("deque is empty")
 	}
-	return d.arr[idx]
+	lastPos := (d.tail - 1 + len(d.data)) % len(d.data)
+	return d.data[lastPos]
 }
 
-func (d *Deque[T]) resize(newCap int) {
-	newArr := make([]T, newCap)
-	if d.head+d.size <= len(d.arr) {
-		copy(newArr, d.arr[d.head:(d.head+d.size)])
-	} else {
-		n := copy(newArr, d.arr[d.head:])
-		copy(newArr[n:], d.arr[:(d.size-n)])
+func (d *Deque[T]) resize() {
+	oldSize := len(d.data)
+	newSize := oldSize * 2
+	if newSize == 0 {
+		newSize = 1
 	}
+	newData := make([]T, newSize)
+	size := d.Size()
+
+	if d.head < d.tail {
+		copy(newData, d.data[d.head:d.tail])
+	} else if size > 0 {
+		n := copy(newData, d.data[d.head:])
+		copy(newData[n:], d.data[:d.tail])
+	}
+
+	d.data = newData
 	d.head = 0
-	d.arr = newArr
+	d.tail = size
 }
 
 func (d *Deque[T]) PushBack(item T) {
-	if len(d.arr) == d.size {
-		d.resize(2 * d.size)
+	if (d.tail+1)%len(d.data) == d.head {
+		d.resize()
 	}
-	d.arr[d.tailInsert()] = item
-	d.size++
+	d.data[d.tail] = item
+	d.tail = (d.tail + 1) % len(d.data)
 }
 
 func (d *Deque[T]) PushFront(item T) {
-	if len(d.arr) == d.size {
-		d.resize(2 * d.size)
+	if (d.tail+1)%len(d.data) == d.head {
+		d.resize()
 	}
-	d.head = d.frontInsert()
-	d.arr[d.head] = item
-	d.size++
-}
-
-func (d *Deque[T]) tailInsert() int {
-	return (d.head + d.size) % len(d.arr)
-}
-
-func (d *Deque[T]) frontInsert() int {
-	if d.head-1 >= 0 {
-		return d.head - 1
-	}
-	return len(d.arr) - 1
+	d.head = (d.head - 1 + len(d.data)) % len(d.data)
+	d.data[d.head] = item
 }
 
 func (d *Deque[T]) PopFront() T {
-	res := d.arr[d.head]
-	d.head++
-	d.size--
-	if d.head == len(d.arr) {
-		d.head = 0
+	if d.Empty() {
+		panic("deque is empty")
 	}
-	return res
+	item := d.data[d.head]
+	d.head = (d.head + 1) % len(d.data)
+	return item
 }
 
 func (d *Deque[T]) PopBack() T {
-	d.size--
-	return d.arr[d.tailInsert()]
+	if d.Empty() {
+		panic("deque is empty")
+	}
+	d.tail = (d.tail - 1 + len(d.data)) % len(d.data)
+	return d.data[d.tail]
 }
 
 func (d *Deque[T]) String() string {
-	res := make([]T, d.Size())
-	if d.head+d.size <= len(d.arr) {
-		copy(res, d.arr[d.head:(d.head+d.size)])
-	} else {
-		n := copy(res, d.arr[d.head:])
-		copy(res[n:], d.arr[:(d.size-n)])
+	if d.Empty() {
+		return "[]"
 	}
 
-	return fmt.Sprintf("%v", res)
+	var sb strings.Builder
+	sb.WriteString("[")
+	size := d.Size()
+	for i := 0; i < size; i++ {
+		pos := (d.head + i) % len(d.data)
+		if i > 0 {
+			sb.WriteString(" ")
+		}
+		fmt.Fprintf(&sb, "%v", d.data[pos])
+	}
+	sb.WriteString("]")
+	return sb.String()
 }
