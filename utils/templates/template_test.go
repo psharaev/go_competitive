@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/psharaev/go_competitive/utils/slice"
+
 	"github.com/psharaev/go_competitive/utils/generator"
 
 	"github.com/stretchr/testify/assert"
@@ -64,13 +66,9 @@ func testSeed(t *testing.T, seed int) {
 	gen := generator.NewGenerator(seed)
 
 	arr := gen.SliceInt(2, 6, 1, 100)
-	testCase(t, arr)
+	testCase(t, slice.SliceCopy(arr))
 }
 
 func slowSolve(arr []int) int {
 	return 0
-}
-
-func SliceCopy[T any](arr []T) []T {
-	return append([]T(nil), arr...)
 }
