@@ -10,7 +10,7 @@ type FastSegmentTree[Item any, Segment any] struct {
 	tree []Segment
 	n    int
 
-	convert func(item Item) Segment
+	convert func(idx int, item Item) Segment
 	merge   func(a, b Segment) Segment
 }
 
@@ -37,18 +37,22 @@ func (t *FastSegmentTree[Item, Segment]) Sum(l, r int, res Segment) Segment {
 
 func (t *FastSegmentTree[Item, Segment]) SetVal(idx int, val Item) {
 	idx = idx + t.n - 1
-	t.tree[idx] = t.convert(val)
+	t.tree[idx] = t.convert(idx, val)
 	for idx != 0 {
 		idx = (idx - 1) >> 1
 		t.tree[idx] = t.merge(t.tree[(2*idx+1)], t.tree[(2*idx+2)])
 	}
 }
 
-func NewFastSegmentTree[Item any, Segment any](arr []Item, convert func(item Item) Segment, merge func(a, b Segment) Segment) FastSegmentTree[Item, Segment] {
+func NewFastSegmentTree[Item any, Segment any](
+	arr []Item,
+	convert func(idx int, item Item) Segment,
+	merge func(a, b Segment) Segment,
+) FastSegmentTree[Item, Segment] {
 	n := NearestPowerOfTwo(len(arr))
 	tree := make([]Segment, 2*n-1)
 	for i := 0; i < len(arr); i++ {
-		tree[n-1+i] = convert(arr[i])
+		tree[n-1+i] = convert(i, arr[i])
 	}
 
 	for i := n - 2; i >= 0; i-- {

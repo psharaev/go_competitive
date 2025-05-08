@@ -25,9 +25,9 @@ func TestStress(t *testing.T) {
 		return
 	}
 
-	for i := 0; i < 1000; i++ {
-		t.Run(strconv.Itoa(i), func(t *testing.T) {
-			testSeed(t, i)
+	for seed := 0; seed < 1000; seed++ {
+		t.Run(strconv.Itoa(seed), func(t *testing.T) {
+			testSeed(t, seed)
 		})
 	}
 }

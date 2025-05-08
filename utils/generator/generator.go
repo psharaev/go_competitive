@@ -33,7 +33,7 @@ func (g *Generator) Bool(p float64) bool {
 
 // SliceInt n = [minSize, maxSize] val = [minVal, maxVal]
 func (g *Generator) SliceInt(minSize, maxSize, minVal, maxVal int) []int {
-	return GenSlice[int](g, minSize, maxSize,
+	return Slice[int](g, minSize, maxSize,
 		func() int {
 			return g.Int(minVal, maxVal)
 		},
@@ -42,15 +42,15 @@ func (g *Generator) SliceInt(minSize, maxSize, minVal, maxVal int) []int {
 
 // SliceBool n = [minSize, maxSize] val = gen.Bool(p)
 func (g *Generator) SliceBool(minSize, maxSize int, p float64) []bool {
-	return GenSlice[bool](g, minSize, maxSize,
+	return Slice[bool](g, minSize, maxSize,
 		func() bool {
 			return g.Bool(p)
 		},
 	)
 }
 
-// GenSlice n = [minSize, maxSize] val = valGen()
-func GenSlice[T any](g *Generator, minSize, maxSize int, valGen func() T) []T {
+// Slice n = [minSize, maxSize] val = valGen()
+func Slice[T any](g *Generator, minSize, maxSize int, valGen func() T) []T {
 	if minSize < 0 {
 		panic("minSize must be >= 0")
 	}
@@ -74,4 +74,19 @@ func GenSlice[T any](g *Generator, minSize, maxSize int, valGen func() T) []T {
 	}
 
 	return slice
+}
+
+// Segment
+// l <= r
+// l = [0, len(arr))
+// r = [l, len(arr))
+func Segment[T any](g *Generator, arr []T) (l int, r int) {
+	l = g.IntExc(0, len(arr))
+	r = g.IntExc(l, len(arr))
+	return l, r
+}
+
+// Pos idx = [0, len(arr))
+func Pos[T any](g *Generator, arr []T) (idx int) {
+	return g.IntExc(0, len(arr))
 }
