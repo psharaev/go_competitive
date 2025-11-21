@@ -23,3 +23,16 @@ func PrefixFunction[T comparable](arr []T) []int {
 
 	return res
 }
+
+// FindPattern найти pattern в text, возвращает позиции вхождения pattern в text
+func FindPattern(text string, pattern string, symbol string) []int {
+	temp := pattern + symbol + text
+	prefs := PrefixFunctionString(temp)
+	res := make([]int, 0, 1)
+	for idx, pref := range prefs {
+		if len(pattern) == pref {
+			res = append(res, idx-len(pattern)-len(symbol)-1)
+		}
+	}
+	return res
+}
